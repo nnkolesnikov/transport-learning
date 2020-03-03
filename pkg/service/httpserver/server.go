@@ -5,16 +5,16 @@ package httpserver
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/valyala/fasthttp"
 )
 
-type errorProcessor interface {
-	Encode(ctx context.Context, r *fasthttp.Response, err error)
-}
+//type errorProcessor interface {
+//	Encode(ctx context.Context, r *fasthttp.Response, err error)
+//}
 
 type service interface {
-
 	GetUser(ctx context.Context, request *models.GetUserRequest) (response models.DefaultResponse, err error)
 	GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.DefaultResponse, err error)
 	GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.DefaultResponse, err error)
@@ -161,4 +161,36 @@ func NewGetOrdersWithoutParamsServer(transport GetOrdersWithoutParamsTransport, 
 		errorProcessor: errorProcessor,
 	}
 	return ls.ServeHTTP
+}
+
+func NewPreparedServer(svc service) {
+	errorProcessor := NewErrorProcessor(http.StatusInternalServerError, "internal error")
+	getOrdersTransport := NewGetOrdersTransport()
+	getUserCountTransport := NewGetUserCountTransport()	
+	getUserTransport := NewGetUserTransport()
+	getOrdersWithoutParamsTransport := NewGetOrdersWithoutParamsTransport() 
+	return MakeFastHTTPRouter(
+		[]*barcodeService.HandlerSettings{
+			{
+				Path:    URIPathClientGetUser,
+				Method:  http.MethodGet,
+				Handler: NewGetUserServer(getUserTransport, svc, errorProcessor),
+			},
+			{
+				Path:    URIPathGetOrders,
+				Method:  http.MethodPost,
+				Handler: NewGetOrdersServer(getOrdersTransport, svc, errorProcessor),
+			},
+			{
+				Path:    URIPathClientGetUserCount,
+				Method:  http.MethodGet,
+				Handler: NewGetUserCountServer(getUserCountTransport, svc, errorProcessor),
+			},
+			{
+				Path:    URIPathGetOrdersWithoutParams,
+				Method:  http.MethodGet,
+				Handler: NewGetOrdersWithoutParamsServer(getOrdersWithoutParamsTransport, svc, errorProcessor),
+			},
+		},
+	)
 }
