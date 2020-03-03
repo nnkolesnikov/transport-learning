@@ -9,4 +9,6 @@ type Response struct {
 }
 
 // Data ...
-type Data struct{}
+type Data struct {
+	Res int
+}
