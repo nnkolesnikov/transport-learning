@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/metrics"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
 
 // instrumentingMiddleware wraps Service and enables request metrics
@@ -33,9 +35,9 @@ func (s *instrumentingMiddleware) GetUserCount(ctx context.Context, request *mod
 	return s.svc.GetUserCount(ctx, request)
 }
 
-func (s *instrumentingMiddleware) GetOrdersWithoutParams(ctx context.Context,  ) (response models.DefaultResponse, err error) {
+func (s *instrumentingMiddleware) GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error) {
 	defer s.recordMetrics("GetOrdersWithoutParams", time.Now(), err)
-	return s.svc.GetOrdersWithoutParams(ctx, )
+	return s.svc.GetOrdersWithoutParams(ctx)
 }
 
 func (s *instrumentingMiddleware) recordMetrics(method string, startTime time.Time, err error) {

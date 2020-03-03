@@ -9,6 +9,8 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
 
 // loggingMiddleware wraps Service and logs request information to the provided logger
@@ -53,16 +55,16 @@ func (s *loggingMiddleware) GetUserCount(ctx context.Context, request *models.Ge
 	return s.svc.GetUserCount(ctx, request)
 }
 
-func (s *loggingMiddleware) GetOrdersWithoutParams(ctx context.Context,  ) (response models.DefaultResponse, err error) {
+func (s *loggingMiddleware) GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error) {
 	defer func(begin time.Time) {
 		_ = s.wrap(err).Log(
 			"method", "GetOrdersWithoutParams",
-			
+
 			"err", err,
 			"elapsed", time.Since(begin),
 		)
 	}(time.Now())
-	return s.svc.GetOrdersWithoutParams(ctx, )
+	return s.svc.GetOrdersWithoutParams(ctx)
 }
 
 func (s *loggingMiddleware) wrap(err error) log.Logger {
