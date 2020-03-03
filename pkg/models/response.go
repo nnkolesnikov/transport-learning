@@ -10,5 +10,5 @@ type Response struct {
 
 // Data ...
 type Data struct {
-	Res int
+	Res bool
 }

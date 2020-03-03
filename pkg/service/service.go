@@ -20,7 +20,7 @@ type service struct{}
 
 func (s *service) GetUser(ctx context.Context, request *models.GetUserRequest) (response models.Response, err error) {
 	if request.Id > 0 {
-		response.Data.Res = 1
+		response.Data.Res = true
 		return
 	}
 	response.Error = true
@@ -31,7 +31,7 @@ func (s *service) GetUser(ctx context.Context, request *models.GetUserRequest) (
 
 func (s *service) GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.Response, err error) {
 	if request.Id > 0 {
-		response.Data.Res = 1
+		response.Data.Res = true
 		return
 	}
 	response.Error = true
@@ -42,7 +42,7 @@ func (s *service) GetOrders(ctx context.Context, request *models.GetOrdersReques
 
 func (s *service) GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.Response, err error) {
 	if request.Id > 0 {
-		response.Data.Res = 1
+		response.Data.Res = true
 		return
 	}
 	response.Error = true
