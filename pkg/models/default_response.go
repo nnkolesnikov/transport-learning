@@ -1,7 +1,7 @@
 package models
 
-// Response ...
-type Response struct {
+// DefaultResponse ...
+type DefaultResponse struct {
 	Error       bool              `json:error`
 	ErrorText   string            `json:error_text`
 	Data        *Data             `json:data`

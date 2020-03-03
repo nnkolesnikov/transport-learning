@@ -10,15 +10,15 @@ import (
 
 // Service ...
 type Service interface {
-	GetUser(ctx context.Context, request *models.GetUserRequest) (response models.Response, err error)
-	GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.Response, err error)
-	GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.Response, err error)
-	GetOrdersWithoutParams(ctx context.Context) (response models.Response, err error)
+	GetUser(ctx context.Context, request *models.GetUserRequest) (response models.DefaultResponse, err error)
+	GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.DefaultResponse, err error)
+	GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.DefaultResponse, err error)
+	GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error)
 }
 
 type service struct{}
 
-func (s *service) GetUser(ctx context.Context, request *models.GetUserRequest) (response models.Response, err error) {
+func (s *service) GetUser(ctx context.Context, request *models.GetUserRequest) (response models.DefaultResponse, err error) {
 	if request.Id > 0 {
 		response.Data.Res = true
 		return
@@ -29,7 +29,7 @@ func (s *service) GetUser(ctx context.Context, request *models.GetUserRequest) (
 	return
 }
 
-func (s *service) GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.Response, err error) {
+func (s *service) GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.DefaultResponse, err error) {
 	if request.Id > 0 {
 		response.Data.Res = true
 		return
@@ -40,7 +40,7 @@ func (s *service) GetOrders(ctx context.Context, request *models.GetOrdersReques
 	return
 }
 
-func (s *service) GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.Response, err error) {
+func (s *service) GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.DefaultResponse, err error) {
 	if request.Id > 0 {
 		response.Data.Res = true
 		return
@@ -51,7 +51,7 @@ func (s *service) GetUserCount(ctx context.Context, request *models.GetUserCount
 	return
 }
 
-func (s *service) GetOrdersWithoutParams(ctx context.Context) (response models.Response, err error) {
+func (s *service) GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error) {
 	return
 }
 
