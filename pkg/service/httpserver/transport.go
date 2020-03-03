@@ -5,6 +5,7 @@ package httpserver
 
 import (
 	"context"
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
 
 	"github.com/mailru/easyjson"
@@ -115,7 +116,7 @@ func NewGetUserCountTransport(errorCreator errorCreator) GetUserCountTransport {
 }
 // GetOrdersWithoutParamsTransport transport interface
 type GetOrdersWithoutParamsTransport interface {
-	DecodeRequest(ctx context.Context, r *fasthttp.Request) ( , err error)
+	DecodeRequest(ctx context.Context, r *fasthttp.Request) (err error)
 	EncodeResponse(ctx context.Context, r *fasthttp.Response, response *models.DefaultResponse) (err error)
 }
 
@@ -124,10 +125,7 @@ type getOrdersWithoutParamsTransport struct {
 }
 
 // DecodeRequest method for decoding requests on server side
-func (t *getOrdersWithoutParamsTransport) DecodeRequest(ctx context.Context, r *fasthttp.Request) ( , err error) {
-	if err = request.UnmarshalJSON(r.Body()); err != nil {
-		return , t.errorCreator(http.StatusBadRequest, "failed to decode JSON request: %v", err)
-	}
+func (t *getOrdersWithoutParamsTransport) DecodeRequest(ctx context.Context, r *fasthttp.Request) (err error) {
 	return
 }
 
