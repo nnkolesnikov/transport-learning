@@ -1,8 +1,4 @@
-//Package service http client
-//CODE GENERATED AUTOMATICALLY
-//THIS FILE COULD BE EDITED BY HANDS
 package httpserver
-
 
 const (
 	URIPrefix = "/api/v1"
@@ -12,10 +8,10 @@ const (
 	URIPathClientGetUserCount = URIPrefix + "/some/%s"
 	URIPathClientGetOrdersWithoutParams = URIPrefix + "/some/%s"
 
-	URIPathGetUser = URIPrefix + "/some/:name"
-	URIPathGetOrders = URIPrefix + "/some/:name"
-	URIPathGetUserCount = URIPrefix + "/some/:name"
-	URIPathGetOrdersWithoutParams = URIPrefix + "/some/:name"
+	URIPathGetUser = URIPrefix + "/user"
+	URIPathGetOrders = URIPrefix + "/orders"
+	URIPathGetUserCount = URIPrefix + "/user/:id/count"
+	URIPathGetOrdersWithoutParams = URIPrefix + "/orders"
 
 	HTTPMethodGetUser = "fill me!"
 	HTTPMethodGetOrders = "fill me!"
