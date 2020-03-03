@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
@@ -25,7 +24,7 @@ func (s *service) GetUser(ctx context.Context, request *models.GetUserRequest) (
 	}
 	response.Error = true
 	response.ErrorText = "bad id"
-	err = fmt.Errorf("bad id")
+	err = errors.New("id <= 0")
 	return
 }
 
@@ -36,7 +35,7 @@ func (s *service) GetOrders(ctx context.Context, request *models.GetOrdersReques
 	}
 	response.Error = true
 	response.ErrorText = "bad id"
-	err = errors.New("bad id")
+	err = errors.New("id <= 0")
 	return
 }
 
@@ -47,7 +46,7 @@ func (s *service) GetUserCount(ctx context.Context, request *models.GetUserCount
 	}
 	response.Error = true
 	response.ErrorText = "bad id"
-	err = fmt.Errorf("bad id")
+	err = errors.New("id <= 0")
 	return
 }
 
