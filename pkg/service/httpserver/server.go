@@ -4,8 +4,6 @@ import (
 	"context"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/nnkolesnikov/transport-learning/pkg/models"
-	"net/http"
-
 	"github.com/valyala/fasthttp"
 )
 
@@ -175,22 +173,22 @@ func NewPreparedServer(svc service, errorProcessor errorProcessor, errorCreator 
 		[]*HandlerSettings{
 			{
 				Path:    URIPathGetUser,
-				Method:  http.MethodGet,
+				Method:  HTTPMethodGetUser,
 				Handler: NewGetUserServer(getUserTransport, svc, errorProcessor),
 			},
 			{
 				Path:    URIPathGetOrders,
-				Method:  http.MethodPost,
+				Method:  HTTPMethodGetOrders,
 				Handler: NewGetOrdersServer(getOrdersTransport, svc, errorProcessor),
 			},
 			{
 				Path:    URIPathGetUserCount,
-				Method:  http.MethodGet,
+				Method:  HTTPMethodGetUserCount,
 				Handler: NewGetUserCountServer(getUserCountTransport, svc, errorProcessor),
 			},
 			{
 				Path:    URIPathGetOrdersWithoutParams,
-				Method:  http.MethodGet,
+				Method:  HTTPMethodGetOrdersWithoutParams,
 				Handler: NewGetOrdersWithoutParamsServer(getOrdersWithoutParamsTransport, svc, errorProcessor),
 			},
 		},
