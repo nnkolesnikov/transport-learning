@@ -58,6 +58,7 @@ func main() {
 		level.Error(logger).Log("msg", "failed to create service", "err", err)
 		os.Exit(1)
 	}
+	svc = service.NewLoggingMiddleware(logger, svc)
 
 	router := httpserver.NewPreparedServer(svc)
 	router.Handle("GET", "/debug/pprof/", fasthttpadaptor.NewFastHTTPHandlerFunc(pprof.Index))
