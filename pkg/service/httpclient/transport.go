@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
 	"strconv"
@@ -120,7 +121,7 @@ func NewGetOrdersClientTransport(
 
 // GetUserCountClientTransport transport interface
 type GetUserCountClientTransport interface {
-	EncodeRequest(ctx *fasthttp.RequestCtx, r *fasthttp.Request, request *models.GetUserCountRequest) (err error)
+	EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserCountRequest) (err error)
 	DecodeResponse(ctx context.Context, r *fasthttp.Response) (response models.DefaultResponse, err error)
 }
 
@@ -132,10 +133,10 @@ type getUserCountClientTransport struct {
 }
 
 // EncodeRequest method for encoding requests on client side
-func (t *getUserCountClientTransport) EncodeRequest(ctx *fasthttp.RequestCtx, r *fasthttp.Request, request *models.GetUserCountRequest) (err error) {
+func (t *getUserCountClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserCountRequest) (err error) {
 	r.Header.SetMethod(t.method)
+	t.pathTemplate = fmt.Sprintf(t.pathTemplate, string(request.Id))
 	r.SetRequestURI(t.pathTemplate)
-	ctx.SetUserValue("id", string(request.Id))
 	return
 }
 
@@ -166,7 +167,7 @@ func NewGetUserCountClientTransport(
 
 // GetOrdersWithoutParamsClientTransport transport interface
 type GetOrdersWithoutParamsClientTransport interface {
-	EncodeRequest(ctx context.Context, r *fasthttp.Request, ) (err error)
+	EncodeRequest(ctx context.Context, r *fasthttp.Request) (err error)
 	DecodeResponse(ctx context.Context, r *fasthttp.Response) (response models.DefaultResponse, err error)
 }
 
@@ -178,7 +179,7 @@ type getOrdersWithoutParamsClientTransport struct {
 }
 
 // EncodeRequest method for encoding requests on client side
-func (t *getOrdersWithoutParamsClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, ) (err error) {
+func (t *getOrdersWithoutParamsClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request) (err error) {
 	r.Header.SetMethod(t.method)
 	r.SetRequestURI(t.pathTemplate)
 	return

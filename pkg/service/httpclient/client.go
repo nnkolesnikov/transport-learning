@@ -103,7 +103,7 @@ func (s *client) GetUserCount(ctx context.Context, request *models.GetUserCountR
 }
 
 // GetOrdersWithoutParams ...
-func (s *client) GetOrdersWithoutParams(ctx context.Context, ) (response models.DefaultResponse, err error) {
+func (s *client) GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error) {
 	req, res := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
 	defer func() {
 		fasthttp.ReleaseRequest(req)
@@ -133,7 +133,6 @@ func NewClient(
 ) Service {
 	return &client{
 		cli: cli,
-
 		transportGetUser:                transportGetUser,
 		transportGetOrders:              transportGetOrders,
 		transportGetUserCount:           transportGetUserCount,
