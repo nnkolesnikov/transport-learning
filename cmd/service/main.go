@@ -3,29 +3,33 @@ package main
 import (
 	"flag"
 	"fmt"
-	fasthttpprometheus "github.com/flf2ko/fasthttp-prometheus"
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
-	"github.com/kelseyhightower/envconfig"
-	"github.com/nnkolesnikov/transport-learning/pkg/service"
-	"github.com/nnkolesnikov/transport-learning/pkg/service/httpserver"
-	"github.com/valyala/fasthttp"
-	"github.com/valyala/fasthttp/fasthttpadaptor"
 	"net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	fasthttpprometheus "github.com/flf2ko/fasthttp-prometheus"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
+	"github.com/kelseyhightower/envconfig"
+	"github.com/valyala/fasthttp"
+	"github.com/valyala/fasthttp/fasthttpadaptor"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/service"
+	"github.com/nnkolesnikov/transport-learning/pkg/service/httpserver"
 )
+
 const (
 	serviceVersion = "dev"
 )
+
 type configuration struct {
 	Port               string `envconfig:"PORT" required:"true" default:"8080"`
 	MaxRequestBodySize int    `envconfig:"MAX_REQUEST_BODY_SIZE" default:"10485760"` // 10 MB
 	Debug              bool   `envconfig:"DEBUG" default:"false"`
 
-	ReadTimeout    time.Duration `envconnfig:"READ_TIMEOUT" default:"1s"`
+	ReadTimeout time.Duration `envconnfig:"READ_TIMEOUT" default:"1s"`
 
 	MetricsNamespace    string `envconfig:"METRICS_NAMESPACE" default:"wb"`
 	MetricsSubsystem    string `envconfig:"METRICS_SUBSYSTEM" default:"barcode_service"`
