@@ -5,7 +5,7 @@ const (
 
 	URIPathClientGetUser                = URIPrefix + "/user"
 	URIPathClientGetOrders              = URIPrefix + "/orders"
-	URIPathClientGetUserCount           = URIPrefix + "/user/:id/count"
+	URIPathClientGetUserCount           = URIPrefix + "/user/%s/count"
 	URIPathClientGetOrdersWithoutParams = URIPrefix + "/orders"
 
 	HTTPMethodGetUser                = "GET"
