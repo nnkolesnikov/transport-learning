@@ -9,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	fasthttpprometheus "github.com/flf2ko/fasthttp-prometheus"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/kelseyhightower/envconfig"
@@ -30,13 +29,6 @@ type configuration struct {
 	Debug              bool   `envconfig:"DEBUG" default:"false"`
 
 	ReadTimeout time.Duration `envconnfig:"READ_TIMEOUT" default:"1s"`
-
-	MetricsNamespace    string `envconfig:"METRICS_NAMESPACE" default:"wb"`
-	MetricsSubsystem    string `envconfig:"METRICS_SUBSYSTEM" default:"barcode_service"`
-	MetricsNameCount    string `envconfig:"METRICS_NAME_COUNT" default:"request_count"`
-	MetricsNameDuration string `envconfig:"METRICS_NAME_DURATION" default:"request_duration"`
-	MetricsHelpCount    string `envconfig:"METRICS_HELP_COUNT" default:"Request count"`
-	MetricsHelpDuration string `envconfig:"METRICS_HELP_DURATION" default:"Request duration"`
 }
 
 func main() {
@@ -70,9 +62,8 @@ func main() {
 	router := httpserver.NewPreparedServer(svc)
 	router.Handle("GET", "/debug/pprof/", fasthttpadaptor.NewFastHTTPHandlerFunc(pprof.Index))
 	router.Handle("GET", "/debug/pprof/profile", fasthttpadaptor.NewFastHTTPHandlerFunc(pprof.Profile))
-	p := fasthttpprometheus.NewPrometheus(cfg.MetricsSubsystem)
 	fasthttpServer := &fasthttp.Server{
-		Handler:            p.WrapHandler(router),
+		Handler:            router.Handler,
 		MaxRequestBodySize: cfg.MaxRequestBodySize,
 		ReadTimeout:        cfg.ReadTimeout,
 	}
