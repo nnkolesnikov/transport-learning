@@ -5,15 +5,15 @@ package httpclient
 
 import (
 	"context"
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 
 	"github.com/valyala/fasthttp"
 )
 
 var (
-
-	GetUser = option{}
-	GetOrders = option{}
-	GetUserCount = option{}
+	GetUser                = option{}
+	GetOrders              = option{}
+	GetUserCount           = option{}
 	GetOrdersWithoutParams = option{}
 )
 
@@ -26,21 +26,20 @@ type Option interface {
 
 // Service implements Service interface
 type Service interface {
-
 	GetUser(ctx context.Context, request *models.GetUserRequest) (response models.DefaultResponse, err error)
 	GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.DefaultResponse, err error)
 	GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.DefaultResponse, err error)
-	GetOrdersWithoutParams(ctx context.Context,  ) (response models.DefaultResponse, err error)
+	GetOrdersWithoutParams(ctx context.Context, ) (response models.DefaultResponse, err error)
 }
 
 type client struct {
 	cli *fasthttp.HostClient
 
-	transportGetUser GetUserClientTransport
-	transportGetOrders GetOrdersClientTransport
-	transportGetUserCount GetUserCountClientTransport
+	transportGetUser                GetUserClientTransport
+	transportGetOrders              GetOrdersClientTransport
+	transportGetUserCount           GetUserCountClientTransport
 	transportGetOrdersWithoutParams GetOrdersWithoutParamsClientTransport
-	options map[interface{}]Option
+	options                         map[interface{}]Option
 }
 
 // GetUser ...
@@ -104,7 +103,7 @@ func (s *client) GetUserCount(ctx context.Context, request *models.GetUserCountR
 }
 
 // GetOrdersWithoutParams ...
-func (s *client) GetOrdersWithoutParams(ctx context.Context,  ) (response models.DefaultResponse, err error) {
+func (s *client) GetOrdersWithoutParams(ctx context.Context, ) (response models.DefaultResponse, err error) {
 	req, res := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
 	defer func() {
 		fasthttp.ReleaseRequest(req)
@@ -126,7 +125,6 @@ func (s *client) GetOrdersWithoutParams(ctx context.Context,  ) (response models
 // NewClient the client creator
 func NewClient(
 	cli *fasthttp.HostClient,
-	
 	transportGetUser GetUserClientTransport,
 	transportGetOrders GetOrdersClientTransport,
 	transportGetUserCount GetUserCountClientTransport,
@@ -135,69 +133,67 @@ func NewClient(
 ) Service {
 	return &client{
 		cli: cli,
-		
-		transportGetUser: transportGetUser,
-		transportGetOrders: transportGetOrders,
-		transportGetUserCount: transportGetUserCount,
+
+		transportGetUser:                transportGetUser,
+		transportGetOrders:              transportGetOrders,
+		transportGetUserCount:           transportGetUserCount,
 		transportGetOrdersWithoutParams: transportGetOrdersWithoutParams,
-		options: options,
+		options:                         options,
 	}
 }
 
 // NewPreparedClient create and set up http client
 func NewPreparedClient(
-	serverURL string, 
-	serverHost string, 
-	maxConns int, 
+	serverURL string,
+	serverHost string,
+	maxConns int,
 	options map[interface{}]Option,
 	errorProcessor errorProcessor,
 	errorCreator errorCreator,
-	
+
 	uriPathGetUser string,
 	uriPathGetOrders string,
 	uriPathGetUserCount string,
 	uriPathGetOrdersWithoutParams string,
-	
+
 	httpMethodGetUser string,
 	httpMethodGetOrders string,
 	httpMethodGetUserCount string,
 	httpMethodGetOrdersWithoutParams string,
 ) Service {
-	
 	transportGetUser := NewGetUserClientTransport(
 		errorProcessor,
 		errorCreator,
 		serverURL+uriPathGetUser,
 		httpMethodGetUser,
 	)
-	
+
 	transportGetOrders := NewGetOrdersClientTransport(
 		errorProcessor,
 		errorCreator,
 		serverURL+uriPathGetOrders,
 		httpMethodGetOrders,
 	)
-	
+
 	transportGetUserCount := NewGetUserCountClientTransport(
 		errorProcessor,
 		errorCreator,
 		serverURL+uriPathGetUserCount,
 		httpMethodGetUserCount,
 	)
-	
+
 	transportGetOrdersWithoutParams := NewGetOrdersWithoutParamsClientTransport(
 		errorProcessor,
 		errorCreator,
 		serverURL+uriPathGetOrdersWithoutParams,
 		httpMethodGetOrdersWithoutParams,
 	)
-	
+
 	return NewClient(
 		&fasthttp.HostClient{
 			Addr:     serverHost,
 			MaxConns: maxConns,
 		},
-		
 		transportGetUser,
 		transportGetOrders,
 		transportGetUserCount,

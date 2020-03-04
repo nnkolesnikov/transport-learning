@@ -3,11 +3,11 @@
 //THIS FILE COULD BE EDITED BY HANDS
 package httpclient
 
-
 import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
 
 	"github.com/valyala/fasthttp"
@@ -19,7 +19,6 @@ type errorProcessor interface {
 	Encode(ctx context.Context, r *fasthttp.Response, err error)
 	Decode(r *fasthttp.Response) error
 }
-
 
 // GetUserClientTransport transport interface
 type GetUserClientTransport interface {
@@ -60,9 +59,9 @@ func (t *getUserClientTransport) DecodeResponse(ctx context.Context, r *fasthttp
 // NewGetUserClientTransport the transport creator for http requests
 func NewGetUserClientTransport(
 	errorProcessor errorProcessor,
-	errorCreator   errorCreator,
-	pathTemplate   string,
-	method         string,
+	errorCreator errorCreator,
+	pathTemplate string,
+	method string,
 ) GetUserClientTransport {
 	return &getUserClientTransport{
 		errorProcessor: errorProcessor,
@@ -71,6 +70,7 @@ func NewGetUserClientTransport(
 		method:         method,
 	}
 }
+
 // GetOrdersClientTransport transport interface
 type GetOrdersClientTransport interface {
 	EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetOrdersRequest) (err error)
@@ -110,9 +110,9 @@ func (t *getOrdersClientTransport) DecodeResponse(ctx context.Context, r *fastht
 // NewGetOrdersClientTransport the transport creator for http requests
 func NewGetOrdersClientTransport(
 	errorProcessor errorProcessor,
-	errorCreator   errorCreator,
-	pathTemplate   string,
-	method         string,
+	errorCreator errorCreator,
+	pathTemplate string,
+	method string,
 ) GetOrdersClientTransport {
 	return &getOrdersClientTransport{
 		errorProcessor: errorProcessor,
@@ -121,6 +121,7 @@ func NewGetOrdersClientTransport(
 		method:         method,
 	}
 }
+
 // GetUserCountClientTransport transport interface
 type GetUserCountClientTransport interface {
 	EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserCountRequest) (err error)
@@ -160,9 +161,9 @@ func (t *getUserCountClientTransport) DecodeResponse(ctx context.Context, r *fas
 // NewGetUserCountClientTransport the transport creator for http requests
 func NewGetUserCountClientTransport(
 	errorProcessor errorProcessor,
-	errorCreator   errorCreator,
-	pathTemplate   string,
-	method         string,
+	errorCreator errorCreator,
+	pathTemplate string,
+	method string,
 ) GetUserCountClientTransport {
 	return &getUserCountClientTransport{
 		errorProcessor: errorProcessor,
@@ -171,9 +172,10 @@ func NewGetUserCountClientTransport(
 		method:         method,
 	}
 }
+
 // GetOrdersWithoutParamsClientTransport transport interface
 type GetOrdersWithoutParamsClientTransport interface {
-	EncodeRequest(ctx context.Context, r *fasthttp.Request,  ) (err error)
+	EncodeRequest(ctx context.Context, r *fasthttp.Request, ) (err error)
 	DecodeResponse(ctx context.Context, r *fasthttp.Response) (response models.DefaultResponse, err error)
 }
 
@@ -185,7 +187,7 @@ type getOrdersWithoutParamsClientTransport struct {
 }
 
 // EncodeRequest method for encoding requests on client side
-func (t *getOrdersWithoutParamsClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request,  ) (err error) {
+func (t *getOrdersWithoutParamsClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, ) (err error) {
 	r.Header.SetMethod(t.method)
 	r.SetRequestURI(t.pathTemplate)
 	r.Header.Set("Content-Type", "application/json")
@@ -210,9 +212,9 @@ func (t *getOrdersWithoutParamsClientTransport) DecodeResponse(ctx context.Conte
 // NewGetOrdersWithoutParamsClientTransport the transport creator for http requests
 func NewGetOrdersWithoutParamsClientTransport(
 	errorProcessor errorProcessor,
-	errorCreator   errorCreator,
-	pathTemplate   string,
-	method         string,
+	errorCreator errorCreator,
+	pathTemplate string,
+	method string,
 ) GetOrdersWithoutParamsClientTransport {
 	return &getOrdersWithoutParamsClientTransport{
 		errorProcessor: errorProcessor,
