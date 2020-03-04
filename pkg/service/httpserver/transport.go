@@ -29,7 +29,7 @@ func (t *getUserTransport) DecodeRequest(ctx context.Context, r *fasthttp.Reques
 		return request, t.errorCreator(
 			http.StatusBadRequest,
 			"Bad request, check the fields.",
-			"failed to get incomeId from query: %v",
+			"failed to get Id from query: %v",
 			err,
 		)
 	}
@@ -96,7 +96,7 @@ func NewGetOrdersTransport(errorCreator errorCreator) GetOrdersTransport {
 
 // GetUserCountTransport transport interface
 type GetUserCountTransport interface {
-	DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetUserCountRequest, err error)
+	DecodeRequest(ctx *fasthttp.RequestCtx) (request models.GetUserCountRequest, err error)
 	EncodeResponse(ctx context.Context, r *fasthttp.Response, response *models.DefaultResponse) (err error)
 }
 
@@ -105,11 +105,13 @@ type getUserCountTransport struct {
 }
 
 // DecodeRequest method for decoding requests on server side
-func (t *getUserCountTransport) DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetUserCountRequest, err error) {
-	if err = request.UnmarshalJSON(r.Body()); err != nil {
-		return models.GetUserCountRequest{}, t.errorCreator(
+func (t *getUserCountTransport) DecodeRequest(ctx *fasthttp.RequestCtx) (request models.GetUserCountRequest, err error) {
+	request.Id, err = strconv.Atoi(ctx.UserValue("id").(string))
+	if err != nil {
+		return request, t.errorCreator(
 			http.StatusBadRequest,
-			"failed to decode JSON request: %v",
+			"Bad request, check the fields.",
+			"failed to get Id from URI: %v",
 			err,
 		)
 	}
