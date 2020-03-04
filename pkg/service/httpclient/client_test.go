@@ -70,25 +70,21 @@ func makeServerClient(serverURL string, svc Service) (server *fasthttp.Server, c
 		HTTPMethodGetUserCount,
 		HTTPMethodGetOrdersWithoutParams,
 	)
-
 	router := httpserver.NewPreparedServer(
 		svc,
 		errorProcessor,
 		service.NewError,
 	)
-
 	server = &fasthttp.Server{
 		Handler:            router.Handler,
 		MaxRequestBodySize: maxRequestBodySize,
 		ReadTimeout:        serverTimeout,
 	}
-
 	go func() {
 		err := server.ListenAndServe(serverURL)
 		if err != nil {
 			log.Printf("server shut down err: %v", err)
 		}
 	}()
-
 	return
 }
