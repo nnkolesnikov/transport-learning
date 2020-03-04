@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
+	"strconv"
 
 	"github.com/valyala/fasthttp"
 )
@@ -37,12 +38,7 @@ type getUserClientTransport struct {
 func (t *getUserClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserRequest) (err error) {
 	r.Header.SetMethod(t.method)
 	r.SetRequestURI(t.pathTemplate)
-	r.Header.Set("Content-Type", "application/json")
-	r.SetBodyStreamWriter(func(w *bufio.Writer) {
-		if err = json.NewEncoder(w).Encode(request); err != nil {
-			return
-		}
-	})
+	r.URI().QueryArgs().Set("Id", strconv.Itoa(request.Id))
 	return
 }
 
@@ -124,7 +120,7 @@ func NewGetOrdersClientTransport(
 
 // GetUserCountClientTransport transport interface
 type GetUserCountClientTransport interface {
-	EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserCountRequest) (err error)
+	EncodeRequest(ctx *fasthttp.RequestCtx, r *fasthttp.Request, request *models.GetUserCountRequest) (err error)
 	DecodeResponse(ctx context.Context, r *fasthttp.Response) (response models.DefaultResponse, err error)
 }
 
@@ -136,15 +132,10 @@ type getUserCountClientTransport struct {
 }
 
 // EncodeRequest method for encoding requests on client side
-func (t *getUserCountClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserCountRequest) (err error) {
+func (t *getUserCountClientTransport) EncodeRequest(ctx *fasthttp.RequestCtx, r *fasthttp.Request, request *models.GetUserCountRequest) (err error) {
 	r.Header.SetMethod(t.method)
 	r.SetRequestURI(t.pathTemplate)
-	r.Header.Set("Content-Type", "application/json")
-	r.SetBodyStreamWriter(func(w *bufio.Writer) {
-		if err = json.NewEncoder(w).Encode(request); err != nil {
-			return
-		}
-	})
+	ctx.SetUserValue("id", string(request.Id))
 	return
 }
 
@@ -190,12 +181,6 @@ type getOrdersWithoutParamsClientTransport struct {
 func (t *getOrdersWithoutParamsClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, ) (err error) {
 	r.Header.SetMethod(t.method)
 	r.SetRequestURI(t.pathTemplate)
-	r.Header.Set("Content-Type", "application/json")
-	r.SetBodyStreamWriter(func(w *bufio.Writer) {
-		if err = json.NewEncoder(w).Encode(); err != nil {
-			return
-		}
-	})
 	return
 }
 
