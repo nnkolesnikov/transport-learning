@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"net/http/pprof"
 	"os"
 	"os/signal"
@@ -60,7 +61,8 @@ func main() {
 	}
 	svc = service.NewLoggingMiddleware(logger, svc)
 
-	router := httpserver.NewPreparedServer(svc)
+	errorProcessor := service.NewErrorProcessor(http.StatusInternalServerError, "internal error")
+	router := httpserver.NewPreparedServer(svc, errorProcessor, service.NewError)
 	router.Handle("GET", "/debug/pprof/", fasthttpadaptor.NewFastHTTPHandlerFunc(pprof.Index))
 	router.Handle("GET", "/debug/pprof/profile", fasthttpadaptor.NewFastHTTPHandlerFunc(pprof.Profile))
 	fasthttpServer := &fasthttp.Server{

@@ -10,8 +10,6 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-type errorCreator func(status int, format string, v ...interface{}) error
-
 // GetUserTransport transport interface
 type GetUserTransport interface {
 	DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetUserRequest, err error)

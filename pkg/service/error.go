@@ -1,7 +1,7 @@
 //Package service http errors
 //CODE GENERATED AUTOMATICALLY
 //THIS FILE COULD BE EDITED BY HANDS
-package httpserver
+package service
 
 import (
 	"context"

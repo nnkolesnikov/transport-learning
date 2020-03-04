@@ -16,14 +16,16 @@ type service interface {
 	GetOrdersWithoutParams(ctx context.Context,  ) (response models.DefaultResponse, err error)
 }
 
-type errProcessor interface {
+type errorProcessor interface {
 	Encode(ctx context.Context, r *fasthttp.Response, err error)
 }
+
+type errorCreator func(status int, format string, v ...interface{}) error
 
 type getUserServer struct {
 	transport      GetUserTransport
 	service        service
-	errorProcessor errProcessor
+	errorProcessor errorProcessor
 }
 
 // ServeHTTP implements http.Handler.
@@ -47,7 +49,7 @@ func (s *getUserServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 }
 
 // NewGetUserServer the server creator
-func NewGetUserServer(transport GetUserTransport, service service, errorProcessor errProcessor) fasthttp.RequestHandler {
+func NewGetUserServer(transport GetUserTransport, service service, errorProcessor errorProcessor) fasthttp.RequestHandler {
 	ls := getUserServer{
 		transport:      transport,
 		service:        service,
@@ -59,7 +61,7 @@ func NewGetUserServer(transport GetUserTransport, service service, errorProcesso
 type getOrdersServer struct {
 	transport      GetOrdersTransport
 	service        service
-	errorProcessor errProcessor
+	errorProcessor errorProcessor
 }
 
 // ServeHTTP implements http.Handler.
@@ -83,7 +85,7 @@ func (s *getOrdersServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 }
 
 // NewGetOrdersServer the server creator
-func NewGetOrdersServer(transport GetOrdersTransport, service service, errorProcessor errProcessor) fasthttp.RequestHandler {
+func NewGetOrdersServer(transport GetOrdersTransport, service service, errorProcessor errorProcessor) fasthttp.RequestHandler {
 	ls := getOrdersServer{
 		transport:      transport,
 		service:        service,
@@ -95,7 +97,7 @@ func NewGetOrdersServer(transport GetOrdersTransport, service service, errorProc
 type getUserCountServer struct {
 	transport      GetUserCountTransport
 	service        service
-	errorProcessor errProcessor
+	errorProcessor errorProcessor
 }
 
 // ServeHTTP implements http.Handler.
@@ -119,7 +121,7 @@ func (s *getUserCountServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 }
 
 // NewGetUserCountServer the server creator
-func NewGetUserCountServer(transport GetUserCountTransport, service service, errorProcessor errProcessor) fasthttp.RequestHandler {
+func NewGetUserCountServer(transport GetUserCountTransport, service service, errorProcessor errorProcessor) fasthttp.RequestHandler {
 	ls := getUserCountServer{
 		transport:      transport,
 		service:        service,
@@ -130,7 +132,7 @@ func NewGetUserCountServer(transport GetUserCountTransport, service service, err
 type getOrdersWithoutParamsServer struct {
 	transport      GetOrdersWithoutParamsTransport
 	service        service
-	errorProcessor errProcessor
+	errorProcessor errorProcessor
 }
 
 // ServeHTTP implements http.Handler.
@@ -154,7 +156,7 @@ func (s *getOrdersWithoutParamsServer) ServeHTTP(ctx *fasthttp.RequestCtx) {
 }
 
 // NewGetOrdersWithoutParamsServer the server creator
-func NewGetOrdersWithoutParamsServer(transport GetOrdersWithoutParamsTransport, service service, errorProcessor errProcessor) fasthttp.RequestHandler {
+func NewGetOrdersWithoutParamsServer(transport GetOrdersWithoutParamsTransport, service service, errorProcessor errorProcessor) fasthttp.RequestHandler {
 	ls := getOrdersWithoutParamsServer{
 		transport:      transport,
 		service:        service,
@@ -163,12 +165,11 @@ func NewGetOrdersWithoutParamsServer(transport GetOrdersWithoutParamsTransport, 
 	return ls.ServeHTTP
 }
 
-func NewPreparedServer(svc service) *fasthttprouter.Router{
-	errorProcessor := NewErrorProcessor(http.StatusInternalServerError, "internal error")
-	getOrdersTransport := NewGetOrdersTransport(NewError)
-	getUserCountTransport := NewGetUserCountTransport(NewError)
-	getUserTransport := NewGetUserTransport(NewError)
-	getOrdersWithoutParamsTransport := NewGetOrdersWithoutParamsTransport(NewError)
+func NewPreparedServer(svc service, errorProcessor errorProcessor, errorCreator errorCreator) *fasthttprouter.Router{
+	getOrdersTransport := NewGetOrdersTransport(errorCreator)
+	getUserCountTransport := NewGetUserCountTransport(errorCreator)
+	getUserTransport := NewGetUserTransport(errorCreator)
+	getOrdersWithoutParamsTransport := NewGetOrdersWithoutParamsTransport(errorCreator)
 
 	return MakeFastHTTPRouter(
 		[]*HandlerSettings{
