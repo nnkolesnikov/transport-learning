@@ -20,19 +20,35 @@ const (
 	serverLaunchingWaitSleep = 1 * time.Second
 )
 
-func TestClient_GetUser(t *testing.T) {
+func TestClient_GetUser_Success(t *testing.T) {
 
 }
 
-func TestClient_GetOrders(t *testing.T) {
+func TestClient_GetOrders_Success(t *testing.T) {
 
 }
 
-func TestClient_GetUserCount(t *testing.T) {
+func TestClient_GetUserCount_Success(t *testing.T) {
 
 }
 
-func TestClient_GetOrdersWithoutParams(t *testing.T) {
+func TestClient_GetOrdersWithoutParams_Success(t *testing.T) {
+
+}
+
+func TestClient_GetUser_Fail(t *testing.T) {
+
+}
+
+func TestClient_GetOrders_Fail(t *testing.T) {
+
+}
+
+func TestClient_GetUserCount_Fail(t *testing.T) {
+
+}
+
+func TestClient_GetOrdersWithoutParams_Fail(t *testing.T) {
 
 }
 
@@ -73,5 +89,6 @@ func makeServerClient(serverURL string, svc Service) (server *fasthttp.Server, c
 			log.Printf("server shut down err: %v", err)
 		}
 	}()
+
 	return
 }
