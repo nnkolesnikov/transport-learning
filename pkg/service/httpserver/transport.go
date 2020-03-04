@@ -1,19 +1,16 @@
-//Package service http transport
-//CODE GENERATED AUTOMATICALLY
-//THIS FILE COULD BE EDITED BY HANDS
 package httpserver
 
 import (
 	"context"
 	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
+	"strconv"
 
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 )
 
 type errorCreator func(status int, format string, v ...interface{}) error
-
 
 // GetUserTransport transport interface
 type GetUserTransport interface {
@@ -27,8 +24,14 @@ type getUserTransport struct {
 
 // DecodeRequest method for decoding requests on server side
 func (t *getUserTransport) DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetUserRequest, err error) {
-	if err = request.UnmarshalJSON(r.Body()); err != nil {
-		return models.GetUserRequest{}, t.errorCreator(http.StatusBadRequest, "failed to decode JSON request: %v", err)
+	request.Id, err = strconv.Atoi(string(r.URI().QueryArgs().Peek("id")))
+	if err != nil {
+		return request, t.errorCreator(
+			http.StatusBadRequest,
+			"Bad request, check the fields.",
+			"failed to get incomeId from query: %v",
+			err,
+		)
 	}
 	return
 }
@@ -37,7 +40,11 @@ func (t *getUserTransport) DecodeRequest(ctx context.Context, r *fasthttp.Reques
 func (t *getUserTransport) EncodeResponse(ctx context.Context, r *fasthttp.Response, response *models.DefaultResponse) (err error) {
 	r.Header.Set("Content-Type", "application/json")
 	if _, err = easyjson.MarshalToWriter(response, r.BodyWriter()); err != nil {
-		return t.errorCreator(http.StatusInternalServerError, "failed to encode JSON response: %s", err)
+		return t.errorCreator(
+			http.StatusInternalServerError,
+			"failed to encode JSON response: %s",
+			err,
+		)
 	}
 	return
 }
@@ -48,6 +55,7 @@ func NewGetUserTransport(errorCreator errorCreator) GetUserTransport {
 		errorCreator: errorCreator,
 	}
 }
+
 // GetOrdersTransport transport interface
 type GetOrdersTransport interface {
 	DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetOrdersRequest, err error)
@@ -70,7 +78,11 @@ func (t *getOrdersTransport) DecodeRequest(ctx context.Context, r *fasthttp.Requ
 func (t *getOrdersTransport) EncodeResponse(ctx context.Context, r *fasthttp.Response, response *models.DefaultResponse) (err error) {
 	r.Header.Set("Content-Type", "application/json")
 	if _, err = easyjson.MarshalToWriter(response, r.BodyWriter()); err != nil {
-		return t.errorCreator(http.StatusInternalServerError, "failed to encode JSON response: %s", err)
+		return t.errorCreator(
+			http.StatusInternalServerError,
+			"failed to encode JSON response: %s",
+			err,
+		)
 	}
 	return
 }
@@ -81,6 +93,7 @@ func NewGetOrdersTransport(errorCreator errorCreator) GetOrdersTransport {
 		errorCreator: errorCreator,
 	}
 }
+
 // GetUserCountTransport transport interface
 type GetUserCountTransport interface {
 	DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetUserCountRequest, err error)
@@ -94,7 +107,11 @@ type getUserCountTransport struct {
 // DecodeRequest method for decoding requests on server side
 func (t *getUserCountTransport) DecodeRequest(ctx context.Context, r *fasthttp.Request) (request models.GetUserCountRequest, err error) {
 	if err = request.UnmarshalJSON(r.Body()); err != nil {
-		return models.GetUserCountRequest{}, t.errorCreator(http.StatusBadRequest, "failed to decode JSON request: %v", err)
+		return models.GetUserCountRequest{}, t.errorCreator(
+			http.StatusBadRequest,
+			"failed to decode JSON request: %v",
+			err,
+		)
 	}
 	return
 }
@@ -114,6 +131,7 @@ func NewGetUserCountTransport(errorCreator errorCreator) GetUserCountTransport {
 		errorCreator: errorCreator,
 	}
 }
+
 // GetOrdersWithoutParamsTransport transport interface
 type GetOrdersWithoutParamsTransport interface {
 	DecodeRequest(ctx context.Context, r *fasthttp.Request) (err error)
