@@ -16,7 +16,7 @@ func (m *MockService) GetUser(ctx context.Context, request *models.GetUserReques
 	if a, ok := args.Get(0).(models.DefaultResponse); ok {
 		return a, args.Error(1)
 	}
-	return response, args.Error(0)
+	return response, args.Error(1)
 }
 
 func (m *MockService) GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.DefaultResponse, err error) {
