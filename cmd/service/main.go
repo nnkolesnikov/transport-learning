@@ -84,11 +84,9 @@ func main() {
 
 	defer func(sig os.Signal) {
 		_ = level.Info(logger).Log("msg", "received signal, exiting", "signal", sig)
-
 		if err := fasthttpServer.Shutdown(); err != nil {
 			_ = level.Error(logger).Log("msg", "server shutdown failure", "err", err)
 		}
-
 		_ = level.Info(logger).Log("msg", "goodbye")
 	}(<-c)
 }

@@ -1,6 +1,3 @@
-//Package service http client
-//CODE GENERATED AUTOMATICALLY
-//THIS FILE COULD BE EDITED BY HANDS
 package httpclient
 
 import (
@@ -132,7 +129,7 @@ func NewClient(
 	options map[interface{}]Option,
 ) Service {
 	return &client{
-		cli: cli,
+		cli:                             cli,
 		transportGetUser:                transportGetUser,
 		transportGetOrders:              transportGetOrders,
 		transportGetUserCount:           transportGetUserCount,
