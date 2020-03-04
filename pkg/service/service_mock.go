@@ -13,7 +13,6 @@ type MockService struct {
 
 func (m *MockService) GetUser(ctx context.Context, request *models.GetUserRequest) (response models.DefaultResponse, err error) {
 	args := m.Called(context.Background(), request)
-
 	if a, ok := args.Get(0).(models.DefaultResponse); ok {
 		return a, args.Error(1)
 	}
@@ -25,13 +24,11 @@ func (m *MockService) GetOrders(ctx context.Context, request *models.GetOrdersRe
 	if a, ok := args.Get(0).(models.DefaultResponse); ok {
 		return a, args.Error(1)
 	}
-
 	return response, args.Error(1)
 }
 
 func (m *MockService) GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.DefaultResponse, err error) {
 	args := m.Called(context.Background(), request)
-
 	if a, ok := args.Get(0).(models.DefaultResponse); ok {
 		return a, args.Error(1)
 	}
@@ -40,7 +37,6 @@ func (m *MockService) GetUserCount(ctx context.Context, request *models.GetUserC
 
 func (m *MockService) GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error) {
 	args := m.Called(context.Background())
-
 	if a, ok := args.Get(0).(models.DefaultResponse); ok {
 		return a, args.Error(1)
 	}
