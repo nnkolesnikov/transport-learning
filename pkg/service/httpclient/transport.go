@@ -39,7 +39,7 @@ type getUserClientTransport struct {
 func (t *getUserClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserRequest) (err error) {
 	r.Header.SetMethod(t.method)
 	r.SetRequestURI(t.pathTemplate)
-	r.URI().QueryArgs().Set("Id", strconv.Itoa(request.Id))
+	r.URI().QueryArgs().Set("id", strconv.Itoa(request.Id))
 	return
 }
 
@@ -135,7 +135,7 @@ type getUserCountClientTransport struct {
 // EncodeRequest method for encoding requests on client side
 func (t *getUserCountClientTransport) EncodeRequest(ctx context.Context, r *fasthttp.Request, request *models.GetUserCountRequest) (err error) {
 	r.Header.SetMethod(t.method)
-	t.pathTemplate = fmt.Sprintf(t.pathTemplate, string(request.Id))
+	t.pathTemplate = fmt.Sprintf(t.pathTemplate, strconv.Itoa(request.Id))
 	r.SetRequestURI(t.pathTemplate)
 	return
 }

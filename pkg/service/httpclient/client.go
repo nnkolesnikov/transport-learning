@@ -26,7 +26,7 @@ type Service interface {
 	GetUser(ctx context.Context, request *models.GetUserRequest) (response models.DefaultResponse, err error)
 	GetOrders(ctx context.Context, request *models.GetOrdersRequest) (response models.DefaultResponse, err error)
 	GetUserCount(ctx context.Context, request *models.GetUserCountRequest) (response models.DefaultResponse, err error)
-	GetOrdersWithoutParams(ctx context.Context, ) (response models.DefaultResponse, err error)
+	GetOrdersWithoutParams(ctx context.Context) (response models.DefaultResponse, err error)
 }
 
 type client struct {
