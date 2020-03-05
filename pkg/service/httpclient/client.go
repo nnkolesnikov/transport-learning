@@ -2,9 +2,10 @@ package httpclient
 
 import (
 	"context"
-	"github.com/nnkolesnikov/transport-learning/pkg/models"
 
 	"github.com/valyala/fasthttp"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
 
 var (
@@ -109,7 +110,7 @@ func (s *client) GetOrdersWithoutParams(ctx context.Context) (response models.De
 	if opt, ok := s.options[GetOrdersWithoutParams]; ok {
 		opt.Prepare(ctx, req)
 	}
-	if err = s.transportGetOrdersWithoutParams.EncodeRequest(ctx, req, ); err != nil {
+	if err = s.transportGetOrdersWithoutParams.EncodeRequest(ctx, req); err != nil {
 		return
 	}
 	err = s.cli.Do(req, res)

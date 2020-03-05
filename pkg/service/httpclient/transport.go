@@ -1,6 +1,3 @@
-//Package service http client
-//CODE GENERATED AUTOMATICALLY
-//THIS FILE COULD BE EDITED BY HANDS
 package httpclient
 
 import (
@@ -8,11 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
 	"strconv"
 
 	"github.com/valyala/fasthttp"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
 
 type errorCreator func(status int, format string, v ...interface{}) error
