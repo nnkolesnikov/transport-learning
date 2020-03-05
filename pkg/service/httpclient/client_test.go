@@ -3,15 +3,17 @@ package httpclient
 import (
 	"context"
 	"errors"
-	"github.com/nnkolesnikov/transport-learning/pkg/models"
-	"github.com/nnkolesnikov/transport-learning/pkg/service"
-	"github.com/nnkolesnikov/transport-learning/pkg/service/httpserver"
-	"github.com/stretchr/testify/assert"
-	"github.com/valyala/fasthttp"
 	"log"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/valyala/fasthttp"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
+	"github.com/nnkolesnikov/transport-learning/pkg/service"
+	"github.com/nnkolesnikov/transport-learning/pkg/service/httpserver"
 )
 
 const (
@@ -25,7 +27,6 @@ const (
 
 	validId    = 10
 	nonValidId = -1
-	errorText  = "bad id"
 
 	methodGetUser                = "GetUser"
 	methodGetOrders              = "GetOrders"
@@ -43,16 +44,16 @@ const (
 )
 
 var (
-	nilError error
-	badIdError= errors.New("id <= 0")
-	iternalError = service.NewError(http.StatusInternalServerError, "internal error")
+	errNil      error
+	errBadId    = errors.New("id <= 0")
+	errInternal = service.NewError(http.StatusInternalServerError, "internal error")
 )
 
 func TestClient_GetUser_Success(t *testing.T) {
 	t.Run(nameTestClientGetUserSuccess, func(t *testing.T) {
 		request, response := makeGetUserRequest(validId), makeGoodDefaultResponse()
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetUser, context.Background(), request).Return(response, nilError)
+		svcMock.On(methodGetUser, context.Background(), request).Return(response, errNil)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -72,7 +73,7 @@ func TestClient_GetOrders_Success(t *testing.T) {
 	t.Run(nameTestClientGetOrdersSuccess, func(t *testing.T) {
 		request, response := makeGetOrdersRequest(validId), makeGoodDefaultResponse()
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetOrders, context.Background(), request).Return(response, nilError)
+		svcMock.On(methodGetOrders, context.Background(), request).Return(response, errNil)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -92,7 +93,7 @@ func TestClient_GetUserCount_Success(t *testing.T) {
 	t.Run(nameTestClientGetUserCountSuccess, func(t *testing.T) {
 		request, response := makeGetUserCountRequest(validId), makeGoodDefaultResponse()
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetUserCount, context.Background(), request).Return(response, nilError)
+		svcMock.On(methodGetUserCount, context.Background(), request).Return(response, errNil)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -112,7 +113,7 @@ func TestClient_GetOrdersWithoutParams_Success(t *testing.T) {
 	t.Run(nameTestClientGetOrdersWithoutParamsSuccess, func(t *testing.T) {
 		response := models.DefaultResponse{}
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetOrdersWithoutParams, context.Background()).Return(response, nilError)
+		svcMock.On(methodGetOrdersWithoutParams, context.Background()).Return(response, errNil)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -125,15 +126,14 @@ func TestClient_GetOrdersWithoutParams_Success(t *testing.T) {
 		res, err := client.GetOrdersWithoutParams(context.Background())
 		assert.Equal(t, res, response)
 		assert.NoError(t, err, "unexpected error:", err)
-
 	})
 }
 
 func TestClient_GetUser_Fail(t *testing.T) {
-	t.Run(nameTestClientGetUserSuccess, func(t *testing.T) {
+	t.Run(nameTestClientGetUserFail, func(t *testing.T) {
 		request, response := makeGetUserRequest(nonValidId), makeBadDefaultResponse()
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetUser, context.Background(), request).Return(response, badIdError)
+		svcMock.On(methodGetUser, context.Background(), request).Return(response, errBadId)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -144,15 +144,15 @@ func TestClient_GetUser_Fail(t *testing.T) {
 		time.Sleep(serverLaunchingWaitSleep)
 
 		_, err := client.GetUser(context.Background(), request)
-		assert.Equal(t, err, iternalError)
+		assert.Equal(t, err, errInternal)
 	})
 }
 
 func TestClient_GetOrders_Fail(t *testing.T) {
-	t.Run(nameTestClientGetUserSuccess, func(t *testing.T) {
+	t.Run(nameTestClientGetOrdersFail, func(t *testing.T) {
 		request, response := makeGetOrdersRequest(nonValidId), makeBadDefaultResponse()
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetOrders, context.Background(), request).Return(response, badIdError)
+		svcMock.On(methodGetOrders, context.Background(), request).Return(response, errBadId)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -163,15 +163,15 @@ func TestClient_GetOrders_Fail(t *testing.T) {
 		time.Sleep(serverLaunchingWaitSleep)
 
 		_, err := client.GetOrders(context.Background(), request)
-		assert.Equal(t, err, iternalError)
+		assert.Equal(t, err, errInternal)
 	})
 }
 
 func TestClient_GetUserCount_Fail(t *testing.T) {
-	t.Run(nameTestClientGetUserSuccess, func(t *testing.T) {
+	t.Run(nameTestClientGetUserCountFail, func(t *testing.T) {
 		request, response := makeGetUserCountRequest(nonValidId), makeBadDefaultResponse()
 		svcMock := new(service.MockService)
-		svcMock.On(methodGetUserCount, context.Background(), request).Return(response, badIdError)
+		svcMock.On(methodGetUserCount, context.Background(), request).Return(response, errBadId)
 		server, client := makeServerClient(serverURL, svcMock)
 		defer func() {
 			err := server.Shutdown()
@@ -182,7 +182,7 @@ func TestClient_GetUserCount_Fail(t *testing.T) {
 		time.Sleep(serverLaunchingWaitSleep)
 
 		_, err := client.GetUserCount(context.Background(), request)
-		assert.Equal(t, err, iternalError)
+		assert.Equal(t, err, errInternal)
 	})
 }
 
