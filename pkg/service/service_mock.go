@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
-	"github.com/nnkolesnikov/transport-learning/pkg/models"
 
 	"github.com/stretchr/testify/mock"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
 
 type MockService struct {

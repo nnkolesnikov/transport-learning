@@ -2,12 +2,13 @@ package httpserver
 
 import (
 	"context"
-	"github.com/nnkolesnikov/transport-learning/pkg/models"
 	"net/http"
 	"strconv"
 
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
+
+	"github.com/nnkolesnikov/transport-learning/pkg/models"
 )
 
 // GetUserTransport transport interface

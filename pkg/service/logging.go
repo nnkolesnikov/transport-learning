@@ -1,6 +1,3 @@
-//Package service logging wrapper
-//CODE GENERATED AUTOMATICALLY
-//THIS FILE COULD BE EDITED BY HANDS
 package service
 
 import (
